@@ -183,6 +183,8 @@ std::size_t loadMatchesFromFolder(PairwiseMatches& matches, const std::string& f
         }
     }
 
+    std::cout << matchFiles.size() << std::endl;
+
 #pragma omp parallel for num_threads(3)
     for (int i = 0; i < matchFiles.size(); ++i)
     {
@@ -241,9 +243,11 @@ bool Load(PairwiseMatches& matches,
 
     for (const auto& folder : foldersSet)
     {
+        std::cout << folder << std::endl;
         nbLoadedMatchFiles += loadMatchesFromFolder(matches, folder, pattern);
     }
 
+    std::cout << nbLoadedMatchFiles << std::endl;
     if (!nbLoadedMatchFiles)
         return false;
 
@@ -369,6 +373,11 @@ bool Save(const PairwiseMatches& matches, const std::string& folder, const std::
         exporter.saveGlobalFile();
 
     return true;
+}
+
+void testtoto(feature::EImageDescriberType param)
+{
+    std::cout << param << std::endl;
 }
 
 }  // namespace matching
