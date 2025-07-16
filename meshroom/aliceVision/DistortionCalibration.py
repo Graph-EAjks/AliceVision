@@ -43,6 +43,14 @@ class DistortionCalibration(desc.AVCommandLineNode):
             description="True if the input image is already desqueezed.",
             value=False,
         ),
+        desc.FloatParam(
+            name="forcedPixelAspectRatio",
+            label="Force PixelAspect Ratio",
+            description="Force pixel aspect ratio value, overriding metadatas. Ignored if less than or equal 0.0.",
+            value=0.0,
+            range=(0.0, 2.0, 0.1),
+            advanced=True,
+        ),
         desc.ChoiceParam(
             name="verboseLevel",
             label="Verbose Level",
