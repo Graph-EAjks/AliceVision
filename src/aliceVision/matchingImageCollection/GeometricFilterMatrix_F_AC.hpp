@@ -49,7 +49,7 @@ struct GeometricFilterMatrix_F_AC : public GeometricFilterMatrix
      * relating them using a robust method (like A Contrario Ransac).
      */
     template<class Regions_or_Features_ProviderT>
-    EstimationStatus geometricEstimation(const sfmData::SfMData* sfmData,
+    EstimationStatus geometricEstimation(const sfmData::SfMData& sfmData,
                                          const Regions_or_Features_ProviderT& regionsPerView,
                                          const Pair& pairIndex,
                                          const matching::MatchesPerDescType& putativeMatchesPerType,
@@ -62,11 +62,11 @@ struct GeometricFilterMatrix_F_AC : public GeometricFilterMatrix
         const IndexT I = pairIndex.first;
         const IndexT J = pairIndex.second;
 
-        const sfmData::View& viewI = sfmData->getView(I);
-        const sfmData::View& viewJ = sfmData->getView(J);
+        const sfmData::View& viewI = sfmData.getView(I);
+        const sfmData::View& viewJ = sfmData.getView(J);
 
-        const camera::IntrinsicBase* camI = sfmData->getIntrinsicPtr(viewI.getIntrinsicId());
-        const camera::IntrinsicBase* camJ = sfmData->getIntrinsicPtr(viewJ.getIntrinsicId());
+        const camera::IntrinsicBase* camI = sfmData.getIntrinsicPtr(viewI.getIntrinsicId());
+        const camera::IntrinsicBase* camJ = sfmData.getIntrinsicPtr(viewJ.getIntrinsicId());
 
         const std::pair<std::size_t, std::size_t> imageSizeI(viewI.getImage().getWidth(), viewI.getImage().getHeight());
         const std::pair<std::size_t, std::size_t> imageSizeJ(viewJ.getImage().getWidth(), viewJ.getImage().getHeight());
@@ -280,7 +280,7 @@ struct GeometricFilterMatrix_F_AC : public GeometricFilterMatrix
                                                       multiview::UnnormalizerT,
                                                       ModelT_>;
 
-        const KernelT kernel(xI, imageSizeI.first, imageSizeI.second, xJ, imageSizeJ.first, imageSizeJ.second, true);
+        const KernelT kernel(xI, imageSizeI.first, imageSizeI.first, xJ, imageSizeJ.first, imageSizeJ.first, true);
 
         // robustly estimate the Fundamental matrix with A Contrario ransac
         const double upperBoundPrecision = m_dPrecision;
@@ -354,7 +354,7 @@ struct GeometricFilterMatrix_F_AC : public GeometricFilterMatrix
      * @param matches
      * @return
      */
-    bool Geometry_guided_matching(const sfmData::SfMData* sfmData,
+    bool Geometry_guided_matching(const sfmData::SfMData& sfmData,
                                   const feature::RegionsPerView& regionsPerView,
                                   const Pair imageIdsPair,
                                   const double dDistanceRatio,
@@ -366,14 +366,14 @@ struct GeometricFilterMatrix_F_AC : public GeometricFilterMatrix
             const IndexT I = imageIdsPair.first;
             const IndexT J = imageIdsPair.second;
 
-            const sfmData::View& viewI = sfmData->getView(I);
-            const sfmData::View& viewJ = sfmData->getView(J);
+            const sfmData::View& viewI = sfmData.getView(I);
+            const sfmData::View& viewJ = sfmData.getView(J);
 
             // retrieve corresponding pair camera intrinsic if any
             const camera::IntrinsicBase* camI =
-              sfmData->getIntrinsics().count(viewI.getIntrinsicId()) ? sfmData->getIntrinsics().at(viewI.getIntrinsicId()).get() : nullptr;
+              sfmData.getIntrinsics().count(viewI.getIntrinsicId()) ? sfmData.getIntrinsics().at(viewI.getIntrinsicId()).get() : nullptr;
             const camera::IntrinsicBase* camJ =
-              sfmData->getIntrinsics().count(viewJ.getIntrinsicId()) ? sfmData->getIntrinsics().at(viewJ.getIntrinsicId()).get() : nullptr;
+              sfmData.getIntrinsics().count(viewJ.getIntrinsicId()) ? sfmData.getIntrinsics().at(viewJ.getIntrinsicId()).get() : nullptr;
 
             robustEstimation::Mat3Model model(m_F);
 
@@ -389,6 +389,24 @@ struct GeometricFilterMatrix_F_AC : public GeometricFilterMatrix
               matches);
         }
         return matches.getNbAllMatches() != 0;
+    }
+
+    Eigen::Matrix3d getMatrix()
+    {
+        return m_F;
+    }
+
+    /**
+     * @return geometric filter type represented by this class
+    */
+    EGeometricFilterType getType()
+    {
+        if (m_estimateDistortion)
+        {
+            return EGeometricFilterType::FUNDAMENTAL_WITH_DISTORTION;
+        }
+
+        return EGeometricFilterType::FUNDAMENTAL_MATRIX;
     }
 
     // Stored data
