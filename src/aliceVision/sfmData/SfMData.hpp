@@ -351,11 +351,6 @@ class SfMData
             return false;
         }
 
-        if (it->second.isRotationOnly())
-        {
-            return false;
-        }
-
         bool rigValid = ((!view.isPartOfRig() || view.isPoseIndependant() || getRigSubPose(view).status != ERigSubPoseStatus::UNINITIALIZED));
         if (!rigValid)
         {
