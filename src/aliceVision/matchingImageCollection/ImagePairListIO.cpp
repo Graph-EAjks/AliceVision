@@ -51,8 +51,8 @@ bool loadPairs(std::istream& stream, PairSet& pairs, int rangeStart, int rangeSi
             oss >> J;
             if (I == J)
             {
-                ALICEVISION_LOG_WARNING("loadPairs: Invalid input file. Image " << I << " sees itself.");
-                return false;
+                //ALICEVISION_LOG_WARNING("loadPairs: Invalid input file. Image " << I << " sees itself.");
+                //return false;
             }
             Pair pairToInsert;
             

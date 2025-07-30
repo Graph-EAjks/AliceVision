@@ -123,7 +123,7 @@ int aliceVision_main(int argc, char** argv)
         ALICEVISION_LOG_ERROR("Unable to load matches.");
         return EXIT_FAILURE;
     }
-
+    
     int chunkStart, chunkEnd;
     if (!rangeComputation(chunkStart, chunkEnd, rangeIteration, rangeBlocksCount, pairwiseMatches.size()))
     {
@@ -172,7 +172,7 @@ int aliceVision_main(int argc, char** argv)
     ALICEVISION_LOG_INFO(std::to_string(filteredMatches.size()) << " putative image pair matches");
     for (const auto& imageMatch : filteredMatches)
     {
-        ALICEVISION_LOG_INFO("\t- image pair (" << imageMatch.first.first + ", " << imageMatch.first.second << ") contains " << imageMatch.second.getNbAllMatches() << " putative matches.");
+        ALICEVISION_LOG_INFO("\t- image pair (" << imageMatch.first.first << ", " << imageMatch.first.second << ") contains " << imageMatch.second.getNbAllMatches() << " putative matches.");
     }
 
 
