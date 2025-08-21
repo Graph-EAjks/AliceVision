@@ -44,6 +44,7 @@ set(sfm_files_headers
     pipeline/regionsIO.hpp
     utils/alignment.hpp
     utils/statistics.hpp
+    utils/poseFilter.hpp
     utils/preprocess.hpp
     utils/syntheticScene.hpp
     LocalBundleAdjustmentGraph.hpp
@@ -84,6 +85,7 @@ set(sfm_files_sources
     pipeline/expanding/LbaPolicyConnexity.cpp
     pipeline/regionsIO.cpp
     utils/alignment.cpp
+    utils/poseFilter.cpp
     utils/preprocess.cpp
     utils/statistics.cpp
     utils/syntheticScene.cpp
