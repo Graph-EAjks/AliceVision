@@ -9,7 +9,20 @@
 namespace aliceVision {
 namespace sfmDataIO {
 
-void generateSampleScene(sfmData::SfMData& output)
+void generateSampleScene(sfmData::SfMData& output, std::string scene, float positionNoise, float rotationNoise)
+{
+    if (scene == "cube")
+    {
+        generateCubeScene(output);
+    }
+    else if (scene == "sphere")
+    {
+        generateSphereScene(output, 1000, 260, positionNoise, rotationNoise);
+    }
+}
+
+
+void generateCubeScene(sfmData::SfMData& output)
 {
     // Generate points on a cube
     IndexT idpt = 0;
@@ -60,6 +73,49 @@ void generateSampleScene(sfmData::SfMData& output)
                 ++idpose;
             }
         }
+    }
+}
+
+void generateSphereScene(sfmData::SfMData& output, int pointsNb, int posesNb, float positionNoise, float rotationNoise)
+{
+    // Generate random points on a sphere
+    IndexT idpt = 0;
+    for (int pt = 0; pt < pointsNb; pt++)
+    {
+        Eigen::Vector3d point3D = Eigen::Vector3d::Random();
+        point3D = 1. * point3D / point3D.norm();
+
+        output.getLandmarks().emplace(idpt, sfmData::Landmark(point3D, feature::EImageDescriberType::UNKNOWN));
+        ++idpt;
+    }
+
+    const int w = 4092;
+    const int h = 2048;
+    const double focalLengthPixX = 1000.0;
+    const double focalLengthPixY = 2000.0;
+    output.getIntrinsics().emplace(
+      0, camera::createPinhole(camera::EDISTORTION::DISTORTION_NONE, camera::EUNDISTORTION::UNDISTORTION_NONE, w, h, focalLengthPixX, focalLengthPixY, 0, 0));
+
+    // Generate poses on a circle
+    for (IndexT idPV = 0; idPV < posesNb; idPV++)
+    {
+        double angle2d = (double(idPV) * 2. * M_PI) / posesNb;
+        Eigen::AngleAxis<double> aa(angle2d + .5 * M_PI, Eigen::Vector3d::UnitY());
+        Eigen::Matrix3d rotation = aa.toRotationMatrix();
+        Eigen::Vector3d position(std::cos(angle2d), 0., std::sin(angle2d));
+        position = 10. * position;
+        if (positionNoise > 0.)
+        {
+            position = position + positionNoise * Eigen::Vector3d::Random();
+        }
+        if (rotationNoise > 0.)
+        {
+            Eigen::Vector3d so3 = SO3::logm(rotation);
+            rotation = SO3::expm(so3 + rotationNoise * Eigen::Vector3d::Random());
+        }
+        output.getPoses().emplace(idPV, geometry::Pose3(rotation, position));
+        output.getViews().emplace(idPV, std::make_shared<sfmData::View>("", idPV, 0, idPV, w, h));
+        output.getView(idPV).setFrameId(idPV);
     }
 }
 

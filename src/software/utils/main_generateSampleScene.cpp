@@ -27,25 +27,36 @@ namespace po = boost::program_options;
 int aliceVision_main(int argc, char** argv)
 {
     // command-line parameters
-    std::string sfmOutputDataFilepath;  // output folder for split images
+    std::string sfmOutputDataFilepath;  // output folder for sfm Data
+    std::string sceneSample;  // scene type to generate ('cube' or 'sphere')
+    float positionNoise = 0.;
+    float rotationNoise = 0.;
 
     // clang-format off
     po::options_description requiredParams("Required parameters");
     requiredParams.add_options()
         ("output,o", po::value<std::string>(&sfmOutputDataFilepath)->required(),
-         "Output sfm file to generate.");
+         "Output sfm file to generate.")
+        ("scene,s", po::value<std::string>(&sceneSample)->default_value("sphere"),
+         "Scene sample to generate. ['cube', 'sphere']");
+
+    po::options_description optionalParams("Optional parameters");
+    optionalParams.add_options()
+        ("positionNoise", po::value<float>(&positionNoise)->default_value(positionNoise), "Noise level to add to camera positions.")
+        ("rotationNoise", po::value<float>(&rotationNoise)->default_value(rotationNoise), "Noise level to add to camera orientations.");
     // clang-format on
 
     CmdLine cmdline("This program is used to generate a sample scene and save it to a given file path.\n"
                     "AliceVision generateSampleScene");
     cmdline.add(requiredParams);
+    cmdline.add(optionalParams);
     if (!cmdline.execute(argc, argv))
     {
         return EXIT_FAILURE;
     }
 
     sfmData::SfMData sfmData;
-    sfmDataIO::generateSampleScene(sfmData);
+    sfmDataIO::generateSampleScene(sfmData, sceneSample, positionNoise, rotationNoise);
 
     ALICEVISION_LOG_INFO("Export SfM: " << sfmOutputDataFilepath);
     if (!sfmDataIO::save(sfmData, sfmOutputDataFilepath, sfmDataIO::ESfMData(sfmDataIO::ALL)))

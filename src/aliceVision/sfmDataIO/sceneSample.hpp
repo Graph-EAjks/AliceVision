@@ -15,7 +15,11 @@ namespace sfmDataIO {
  * @brief Create an SfmData with some arbitrary content.
  * This is used in unit tests to validate read/write sfmData files.
  */
-void generateSampleScene(sfmData::SfMData& output);
+void generateSampleScene(sfmData::SfMData& output, std::string scene="cube", float positionNoise=0., float rotationNoise=0.);
+
+void generateCubeScene(sfmData::SfMData& output);
+
+void generateSphereScene(sfmData::SfMData& output, int pointsNb, int posesNb, float positionNoise=0., float rotationNoise=0.);
 
 }  // namespace sfmDataIO
 }  // namespace aliceVision
