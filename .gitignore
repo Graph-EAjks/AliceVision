@@ -76,3 +76,5 @@ Production
 
 **/.vscode
 **/.vs
+
+vcpkg_installed/
