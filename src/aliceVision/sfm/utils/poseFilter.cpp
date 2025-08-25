@@ -23,7 +23,7 @@ bool poseFilter::process(sfmData::SfMData& sfmData, const bool filterPosition, c
 
     std::vector<IndexT> poseIdsVec(viewCount);
 
-    if (!getOrderedPoseIds(sfmData, poseIdsVec))
+    if (viewCount == 0 || !getOrderedPoseIds(sfmData, poseIdsVec))
     {
         return false;
     }
@@ -66,21 +66,24 @@ bool poseFilter::getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT
 {
     const int viewCount = sfmData.getViews().size();
 
-    int minFrameId = -1;
-    int maxFrameId = -1;
-    int minFrameIdWithPose = -1;
+    IndexT firstViewFrameId = sfmData.getViews().begin()->second->getFrameId();
+    IndexT minFrameId = firstViewFrameId;  // Arbitrary frameId init
+    IndexT maxFrameId = firstViewFrameId;  // Arbitrary frameId init
+    IndexT minFrameIdWithPose;
+
+    bool existingPoseFound = false;
 
     for (const auto& pView : sfmData.getViews())
     {
-        const int frameId = int(pView.second->getFrameId());
-        if (minFrameId == -1 || frameId < minFrameId)
+        const IndexT frameId = pView.second->getFrameId();
+        if (frameId < minFrameId)
         {
             minFrameId = frameId;
         }
-        if (minFrameIdWithPose == -1 || frameId < minFrameIdWithPose)
+        if ( (!existingPoseFound || frameId < minFrameIdWithPose) && sfmData.existsPose(*pView.second) )
         {
-            if (sfmData.existsPose(*pView.second))
-                minFrameIdWithPose = frameId;
+            existingPoseFound = true;
+            minFrameIdWithPose = frameId;
         }
         if (frameId > maxFrameId)
             maxFrameId = frameId;
@@ -91,14 +94,14 @@ bool poseFilter::getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT
     ALICEVISION_LOG_INFO(" minFrameId : " << minFrameId);
     ALICEVISION_LOG_INFO(" maxFrameId : " << maxFrameId);
 
-    if (frameIdRange != viewCount)
+    if ( !existingPoseFound || (frameIdRange != viewCount) )
     {
         return false;
     }
 
     for (const auto& pView : sfmData.getViews())
     {
-        const int frameId = int(pView.second->getFrameId());
+        const IndexT frameId = int(pView.second->getFrameId());
         poseIdsVec[frameId-minFrameId] = pView.second->getPoseId();
     }
 
@@ -109,7 +112,7 @@ bool poseFilter::getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT
 
     // fill in the blanks within the camera poses list
 
-    for (int frameId = minFrameId; frameId <= maxFrameId; frameId++)
+    for (IndexT frameId = minFrameId; frameId <= maxFrameId; frameId++)
     {
         auto framePose = poses.find(poseIdsVec[frameId-minFrameId]);
 
