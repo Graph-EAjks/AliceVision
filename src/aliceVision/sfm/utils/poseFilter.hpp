@@ -30,7 +30,7 @@ public:
     bool process(sfmData::SfMData& sfmData, const bool filterPosition, const bool filterRotation, const int scaleFactor, const int iterationCount);
 
 private:
-    bool getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT>& poseIdsVec);
+    bool getOrderedViewIds(sfmData::SfMData& sfmData, std::vector<IndexT>& viewIdsVec);
 };
 
 } // namespace sfm

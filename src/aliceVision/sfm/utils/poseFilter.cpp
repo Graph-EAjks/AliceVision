@@ -19,11 +19,10 @@ bool poseFilter::process(sfmData::SfMData& sfmData, const bool filterPosition, c
 
     const int viewCount = sfmData.getViews().size();
 
-    sfmData::Poses& poses = sfmData.getPoses();
+    std::vector<IndexT> viewIdsVec(viewCount);
 
-    std::vector<IndexT> poseIdsVec(viewCount);
-
-    if (viewCount == 0 || !getOrderedPoseIds(sfmData, poseIdsVec))
+    // Get the temporally ordered view IDs in viewIdsVec
+    if (viewCount == 0 || !getOrderedViewIds(sfmData, viewIdsVec))
     {
         return false;
     }
@@ -35,34 +34,40 @@ bool poseFilter::process(sfmData::SfMData& sfmData, const bool filterPosition, c
     Eigen::MatrixXd viewRotations(3, viewCount);
     Eigen::MatrixXd viewCenters(3, viewCount);
 
+    // Get the temporally ordered view positions and orientations
     for (int frameIdx = 0; frameIdx < viewCount; frameIdx++)
     {
-        const sfmData::CameraPose framePose = poses.at(poseIdsVec[frameIdx]);
+        const sfmData::View& frameView = sfmData.getView(viewIdsVec[frameIdx]);
+        const sfmData::CameraPose framePose = sfmData.getPose(frameView);
         viewCenters.col(frameIdx) = framePose.getTransform().center();
         viewRotations.col(frameIdx) = SO3::logm(framePose.getTransform().rotation());
     }
 
+    // Apply a temporal filter to view positions
     if (filterPosition)
     {
         viewCenters = tFilter.applyMultiscale(viewCenters, scaleFactor, iterationCount, false);
     }
 
+    // Apply a temporal filter to view orientations
     if (filterRotation)
     {
         viewRotations = tFilter.applyMultiscale(viewRotations, scaleFactor, iterationCount, true);
     }
 
+    // Save the temporally filtered poses
     for (int frameIdx = 0; frameIdx < viewCount; frameIdx++)
     {
         geometry::Pose3 newPose(SO3::expm(viewRotations.col(frameIdx)), viewCenters.col(frameIdx));
-        sfmData.setPose(sfmData.getView(poseIdsVec[frameIdx]), sfmData::CameraPose(newPose));
-    }
+        const sfmData::View& frameView = sfmData.getView(viewIdsVec[frameIdx]);
+        sfmData.setPose(frameView, sfmData::CameraPose(newPose));
+   }
 
     return true;
 }
 
 
-bool poseFilter::getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT>& poseIdsVec)
+bool poseFilter::getOrderedViewIds(sfmData::SfMData& sfmData, std::vector<IndexT>& viewIdsVec)
 {
     const int viewCount = sfmData.getViews().size();
 
@@ -73,6 +78,7 @@ bool poseFilter::getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT
 
     bool existingPoseFound = false;
 
+    // Get the frameIDs range and the frameID of the first view with an existing pose
     for (const auto& pView : sfmData.getViews())
     {
         const IndexT frameId = pView.second->getFrameId();
@@ -99,27 +105,30 @@ bool poseFilter::getOrderedPoseIds(sfmData::SfMData& sfmData, std::vector<IndexT
         return false;
     }
 
+    // Store the temporally ordered view IDs
     for (const auto& pView : sfmData.getViews())
     {
         const IndexT frameId = int(pView.second->getFrameId());
-        poseIdsVec[frameId-minFrameId] = pView.second->getPoseId();
+        viewIdsVec[frameId-minFrameId] = pView.first;
     }
 
     ALICEVISION_LOG_INFO(" minFrameIdWithPose : " << minFrameIdWithPose);
 
-    sfmData::Poses& poses = sfmData.getPoses();
-    sfmData::CameraPose lastValidPose = poses.at(poseIdsVec[minFrameIdWithPose-minFrameId]);
+    const sfmData::View& lastValidView = sfmData.getView(viewIdsVec[minFrameIdWithPose-minFrameId]);
+    sfmData::CameraPose lastValidPose = sfmData.getPose(lastValidView);
 
-    // fill in the blanks within the camera poses list
+    // Fill in the blanks within the camera poses list (so that every view gets a pose)
+    // using the first view with an existing pose for the first views without existing pose
+    // and using the last known view with an existing pose for any other view without existing pose
 
-    for (IndexT frameId = minFrameId; frameId <= maxFrameId; frameId++)
+    for (IndexT frameViewID : viewIdsVec)
     {
-        auto framePose = poses.find(poseIdsVec[frameId-minFrameId]);
+        const sfmData::View& currentView = sfmData.getView(frameViewID);
 
-        if (framePose == poses.end()) // i.e. pose does not exist
-            poses.emplace(poseIdsVec[frameId-minFrameId], lastValidPose.getTransform());
+        if (!sfmData.existsPose(currentView))
+            sfmData.setPose(currentView, lastValidPose);
         else
-            lastValidPose = framePose->second;
+            lastValidPose = sfmData.getPose(currentView);
     }
 
     return true;
@@ -137,24 +146,25 @@ bool tempFilter::init()
     // Savitzky-Golay smoothing filter
     // Reference: https://en.wikipedia.org/wiki/Savitzky-Golay_filter
 
+    filterCoeff.resize(kernelSize);
     // Savitzky-Golay smoothing filter coefficients (window size 9, polynomial order 2)
-    std::vector<double> filterCoeffVec = {-21., 14., 39., 54., 59., 54., 39., 14., -21.};
-    filterCoeff = Map<VectorXd>(filterCoeffVec.data(), 9) / 231.;
+    filterCoeff << -21., 14., 39., 54., 59., 54., 39., 14., -21.;
+    filterCoeff = filterCoeff / 231.;
 
-    // Savitzky-Golay first derivative filter coefficients
-    filterCoeffVec = {21., 7., -32., -86., 86., 32., -7., -21.};
-    diffFilterCoeff = Map<VectorXd>(filterCoeffVec.data(), 8) / 231.;
-
+    VectorXd filterCoeff_b(kernelSize);
     // Savitzky-Golay linear term coefficients
-    filterCoeffVec = {-4., -3., -2., -1., 0., 1., 2., 3., 4.};
-    VectorXd filterCoeff_b = Map<VectorXd>(filterCoeffVec.data(), 9) / 60.;
+    filterCoeff_b << -4., -3., -2., -1., 0., 1., 2., 3., 4.;
+    filterCoeff_b = filterCoeff_b / 60.;
 
+    VectorXd filterCoeff_c(kernelSize);
     // Savitzky-Golay quadratic term coefficients
-    filterCoeffVec = {28., 7., -8., -17., -20., -17., -8., 7., 28.};
-    VectorXd filterCoeff_c = Map<VectorXd>(filterCoeffVec.data(), 9) / 924.;
+    filterCoeff_c << 28., 7., -8., -17., -20., -17., -8., 7., 28.;
+    filterCoeff_c = filterCoeff_c / 924.;
 
     MatrixXd filterCoeff_x = MatrixXd(kernelSize, kernelSize);
 
+    // The above filter coefficients are defined for the center position of the filter window
+    // Below, the filter coefficients for any position in the filter window are computed
     for (int coeffIndex = 0; coeffIndex < kernelSize; coeffIndex++)
     {
         double x = coeffIndex - kernelSize / 2;
@@ -164,11 +174,21 @@ bool tempFilter::init()
         }
     }
 
+    // We extract the filter coefficients for the window tail and the window head (respectively the first and last positions)
+    // These filters are respectively used for the first frames and the last frames
     tailFilter = filterCoeff_x(all, seq(0, last/2-1));
     headFilter = filterCoeff_x(all, seq(last/2+1, last));
 
+    diffFilterCoeff.resize(kernelSize-1);
+    // These filter coefficients (dfc) applied to the temporal delta signal
+    // are equivalent to filterCoeff (fc) applied to the same signal (s)
+    // i.e. sum( dfc(i) * (s(i+1)-s(i)) ) = sum( fc(i) * s(i) )
+    diffFilterCoeff << 21., 7., -32., -86., 86., 32., -7., -21.;
+    diffFilterCoeff = diffFilterCoeff / 231.;
+
     MatrixXd diffFilterCoeff_x = MatrixXd(kernelSize-1, kernelSize);
 
+    // These filter coefficients (diffFilterCoeff_x) are equivalent to filterCoeff_x for the temporal delta signal
     for (int filterIndex = 0; filterIndex < kernelSize; filterIndex++)
     {
         if (filterIndex > 0)
@@ -220,7 +240,12 @@ Eigen::MatrixXd tempFilter::apply(Eigen::MatrixXd& inputSignal, bool isAngle)
     const int innersize = inputSignal.cols() - 2 * (kernelSize/2);
 
     // The filter used for the angles is equivalent to the filter used for the positions
-    // but it is designed to work with temporal diff signals to increase accuracy
+    // but the filter coefficients are designed to work with temporal delta signals
+    // This means the filter coefficients (dfc) applied to the temporal delta signal
+    // are equivalent to filterCoeff (fc) applied to the same signal (s)
+    // i.e. sum( dfc(i) * (s(i+1)-s(i)) ) = sum( fc(i) * s(i) )
+    // Delta signals are used for the angles as filter operations over rotation angles are not well-defined
+    // and are more accurate for small rotation angles
 
     if (isAngle)
     {
@@ -230,6 +255,7 @@ Eigen::MatrixXd tempFilter::apply(Eigen::MatrixXd& inputSignal, bool isAngle)
 
         VectorXd norms(inputSignal.cols()-1);
 
+        // The temporal delta signal is computed using rotations matrices, and then converted into so3
         for (int col = 0; col < inputSignal.cols() - 1; col++)
         {
             Matrix3d prevMat3 = expm(inputSignal.col(col));
@@ -246,6 +272,7 @@ Eigen::MatrixXd tempFilter::apply(Eigen::MatrixXd& inputSignal, bool isAngle)
         //      filteredSignal = inputSignal_(t) + diffFilteredSignal_(t)
         MatrixXd diffFilteredSignal(inputSignal.rows(), inputSignal.cols());
 
+        // Apply the filter on the temporal delta signal
         diffFilteredSignal(all, seqN(kernelSize/2, innersize)) = diffSignal(all, seqN(fix<0>, innersize)) * diffFilterCoeff(0)
                                                                + diffSignal(all, seqN(fix<1>, innersize)) * diffFilterCoeff(1)
                                                                + diffSignal(all, seqN(fix<2>, innersize)) * diffFilterCoeff(2)
@@ -255,6 +282,7 @@ Eigen::MatrixXd tempFilter::apply(Eigen::MatrixXd& inputSignal, bool isAngle)
                                                                + diffSignal(all, seqN(fix<6>, innersize)) * diffFilterCoeff(6)
                                                                + diffSignal(all, seqN(fix<7>, innersize)) * diffFilterCoeff(7);
 
+        // The first and the last frames use specific filters
         diffFilteredSignal(all, seqN(fix<0>, fix<4>)) = diffSignal(all, seqN(fix<0>, fix<8>)) * tailDiffFilter;
         diffFilteredSignal(all, seqN(last-fix<3>, fix<4>)) = diffSignal(all, seqN(last-fix<7>, fix<8>)) * headDiffFilter;
 
@@ -270,19 +298,10 @@ Eigen::MatrixXd tempFilter::apply(Eigen::MatrixXd& inputSignal, bool isAngle)
             Vector3d resSo3 = logm(resMat3);
             filteredSignal.col(col) = resSo3;
         }
-
-        for (int col = 0; col < inputSignal.cols() - 1; col++)
-        {
-            Matrix3d prevMat3 = expm(filteredSignal.col(col));
-            Matrix3d currMat3 = expm(filteredSignal.col(col+1));
-
-            Matrix3d diffMat3 = currMat3 * prevMat3.transpose();
-            Vector3d diffSo3 = logm(diffMat3);
-            diffSignal.col(col) = diffSo3;
-        }
     }
     else
     {
+        // Apply the filter
         filteredSignal(all, seqN(kernelSize/2, innersize)) = inputSignal(all, seqN(fix<0>, innersize)) * filterCoeff(0)
                                                            + inputSignal(all, seqN(fix<1>, innersize)) * filterCoeff(1)
                                                            + inputSignal(all, seqN(fix<2>, innersize)) * filterCoeff(2)
@@ -293,6 +312,7 @@ Eigen::MatrixXd tempFilter::apply(Eigen::MatrixXd& inputSignal, bool isAngle)
                                                            + inputSignal(all, seqN(fix<7>, innersize)) * filterCoeff(7)
                                                            + inputSignal(all, seqN(fix<8>, innersize)) * filterCoeff(8);
 
+        // The first and the last frames use specific filters
         filteredSignal(all, seqN(fix<0>, fix<4>)) = inputSignal(all, seqN(fix<0>, fix<9>)) * tailFilter;
         filteredSignal(all, seqN(last-fix<3>, fix<4>)) = inputSignal(all, seqN(last-fix<8>, fix<9>)) * headFilter;
     }
@@ -307,6 +327,8 @@ Eigen::MatrixXd tempFilter::applyMultiscale(Eigen::MatrixXd& inputSignal, const 
     using namespace indexing;
 
     MatrixXd filteredSignal(inputSignal);
+
+    // This filter extends the range of the original filter by applying the filter to the sub-sampled signal
 
     // The multi-scale filter applies filtering at decreasing scales
     // controlled by the following constant
