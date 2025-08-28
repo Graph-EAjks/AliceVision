@@ -74,6 +74,13 @@ bool ExpansionChunk::process(sfmData::SfMData & sfmData, const track::TracksHand
         }
     }
 
+    //Early exit if no valid resections
+    if (intermediateInfos.size() == 0)
+    {
+        ALICEVISION_LOG_INFO("ExpansionChunk::process early end");
+        return false;
+    }
+
     //Check that at least one view has rich info
     const int poorInliersCount = 100;
     int richViews = 0;
