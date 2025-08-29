@@ -6,6 +6,7 @@
             "CameraInit": "12.0",
             "DepthMap": "5.0",
             "DepthMapFilter": "4.0",
+            "ExportFiles": "1.3",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
             "ImageDetectionPrompt": "0.1",
@@ -14,7 +15,6 @@
             "MeshFiltering": "3.0",
             "Meshing": "7.0",
             "PrepareDenseScene": "3.1",
-            "Publish": "1.3",
             "StructureFromMotion": "3.3",
             "Texturing": "6.0"
         },
@@ -155,8 +155,8 @@
                 ]
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 2600,
                 0

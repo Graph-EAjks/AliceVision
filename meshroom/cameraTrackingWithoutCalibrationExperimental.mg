@@ -11,6 +11,7 @@
             "DepthMapFilter": "4.0",
             "ExportAnimatedCamera": "2.0",
             "ExportDistortion": "2.0",
+            "ExportFiles": "1.3",
             "ExportImages": "1.0",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
@@ -23,7 +24,6 @@
             "MeshDecimate": "1.0",
             "MeshFiltering": "3.0",
             "Meshing": "7.0",
-            "Publish": "1.3",
             "RelativePoseEstimating": "3.0",
             "ScenePreview": "2.0",
             "SfMBootStrapping": "4.1",
@@ -389,8 +389,8 @@
                 "color": "#3f3138"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 5228,
                 100

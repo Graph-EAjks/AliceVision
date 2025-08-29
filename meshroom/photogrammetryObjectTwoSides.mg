@@ -7,6 +7,7 @@
             "ConvertSfMFormat": "2.0",
             "DepthMap": "5.0",
             "DepthMapFilter": "4.0",
+            "ExportFiles": "1.3",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
             "ImageDetectionPrompt": "0.1",
@@ -16,7 +17,6 @@
             "MeshFiltering": "3.0",
             "Meshing": "7.0",
             "PrepareDenseScene": "3.1",
-            "Publish": "1.3",
             "SfMMerge": "3.0",
             "SfMTransform": "3.1",
             "SfMTriangulation": "1.0",
@@ -403,8 +403,8 @@
                 "color": "#4D3E5C"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 3200,
                 400

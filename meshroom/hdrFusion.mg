@@ -4,10 +4,10 @@
         "fileVersion": "2.0",
         "nodesVersions": {
             "CameraInit": "12.0",
+            "ExportFiles": "1.3",
             "LdrToHdrCalibration": "3.1",
             "LdrToHdrMerge": "4.1",
-            "LdrToHdrSampling": "4.0",
-            "Publish": "1.3"
+            "LdrToHdrSampling": "4.0"
         },
         "template": true
     },
@@ -61,8 +61,8 @@
                 "input": "{CameraInit_1.output}"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 800,
                 0

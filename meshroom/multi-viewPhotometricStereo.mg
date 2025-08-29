@@ -6,6 +6,7 @@
             "CameraInit": "12.0",
             "DepthMap": "5.0",
             "DepthMapFilter": "4.0",
+            "ExportFiles": "1.3",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
             "ImageMatching": "2.0",
@@ -14,7 +15,6 @@
             "Meshing": "7.0",
             "PhotometricStereo": "1.0",
             "PrepareDenseScene": "3.1",
-            "Publish": "1.3",
             "SfMFilter": "1.0",
             "SfMTransfer": "2.1",
             "SphereDetection": "1.0",
@@ -174,8 +174,8 @@
                 "input": "{PhotometricStereo_1.outputSfmDataNormalPNG}"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 2400,
                 0

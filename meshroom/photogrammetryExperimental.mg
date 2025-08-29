@@ -6,6 +6,7 @@
             "CameraInit": "12.0",
             "DepthMap": "5.0",
             "DepthMapFilter": "4.0",
+            "ExportFiles": "1.3",
             "ExportImages": "1.0",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
@@ -13,7 +14,6 @@
             "IntrinsicsTransforming": "1.0",
             "MeshFiltering": "3.0",
             "Meshing": "7.0",
-            "Publish": "1.3",
             "RelativePoseEstimating": "3.0",
             "SfMBootStrapping": "4.1",
             "SfMColorizing": "1.0",
@@ -134,8 +134,8 @@
                 "depthMapsFolder": "{DepthMapFilter_1.output}"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 3405,
                 -12

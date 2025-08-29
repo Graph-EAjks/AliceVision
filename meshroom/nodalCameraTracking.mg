@@ -10,13 +10,13 @@
             "DistortionCalibration": "6.0",
             "ExportAnimatedCamera": "2.0",
             "ExportDistortion": "2.0",
+            "ExportFiles": "1.3",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
             "ImageDetectionPrompt": "0.1",
             "ImageMatching": "2.0",
             "ImageSegmentationBox": "0.2",
             "NodalSfM": "2.0",
-            "Publish": "1.3",
             "RelativePoseEstimating": "3.0",
             "ScenePreview": "2.0",
             "TracksBuilding": "1.0"
@@ -223,8 +223,8 @@
                 "color": "#80766f"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 2000,
                 0

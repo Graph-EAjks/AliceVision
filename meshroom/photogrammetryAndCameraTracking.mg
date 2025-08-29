@@ -12,6 +12,7 @@
             "DistortionCalibration": "6.0",
             "ExportAnimatedCamera": "2.0",
             "ExportDistortion": "2.0",
+            "ExportFiles": "1.3",
             "FeatureExtraction": "1.3",
             "FeatureMatching": "2.0",
             "ImageDetectionPrompt": "0.1",
@@ -23,7 +24,6 @@
             "MeshFiltering": "3.0",
             "Meshing": "7.0",
             "PrepareDenseScene": "3.1",
-            "Publish": "1.3",
             "ScenePreview": "2.0",
             "StructureFromMotion": "3.3",
             "Texturing": "6.0"
@@ -482,8 +482,8 @@
                 "color": "#384a55"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 2400,
                 -100

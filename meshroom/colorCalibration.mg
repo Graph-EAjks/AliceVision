@@ -6,7 +6,7 @@
             "CameraInit": "12.0",
             "ColorCheckerCorrection": "2.0",
             "ColorCheckerDetection": "2.0",
-            "Publish": "1.3"
+            "ExportFiles": "1.3"
         },
         "template": true
     },
@@ -42,8 +42,8 @@
                 "input": "{CameraInit_1.output}"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 279,
                 -10

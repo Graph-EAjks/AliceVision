@@ -7,7 +7,7 @@
             "CheckerboardDetection": "1.0",
             "DistortionCalibration": "6.0",
             "ExportDistortion": "2.0",
-            "Publish": "1.3"
+            "ExportFiles": "1.3"
         },
         "template": true
     },
@@ -53,8 +53,8 @@
                 "input": "{DistortionCalibration_1.output}"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 800,
                 0

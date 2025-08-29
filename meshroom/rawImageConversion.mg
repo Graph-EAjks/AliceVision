@@ -4,8 +4,8 @@
         "fileVersion": "2.0",
         "nodesVersions": {
             "CameraInit": "12.0",
-            "ImageProcessing": "3.3",
-            "Publish": "1.3"
+            "ExportFiles": "1.3",
+            "ImageProcessing": "3.3"
         },
         "template": true
     },
@@ -30,8 +30,8 @@
                 "keepImageFilename": true
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "ExportFiles_1": {
+            "nodeType": "ExportFiles",
             "position": [
                 175,
                 -43
