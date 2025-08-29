@@ -32,6 +32,11 @@ bool ExpansionChunk::process(sfmData::SfMData & sfmData, const track::TracksHand
         return false;
     }
 
+    if (!_historyHandler)
+    {
+        return false;
+    }
+
 
     struct IntermediateResectionInfo
     {
@@ -42,6 +47,7 @@ bool ExpansionChunk::process(sfmData::SfMData & sfmData, const track::TracksHand
     };
 
     std::vector<IntermediateResectionInfo> intermediateInfos;
+    std::set<IndexT> addedViews;
 
     ALICEVISION_LOG_INFO("Resection start");
     #pragma omp parallel for
@@ -106,6 +112,7 @@ bool ExpansionChunk::process(sfmData::SfMData & sfmData, const track::TracksHand
         }
         
         addPose(sfmData, item.viewId, item.pose);
+        addedViews.insert(item.viewId);
     }
 
     // Get a list of valid views
@@ -136,11 +143,8 @@ bool ExpansionChunk::process(sfmData::SfMData & sfmData, const track::TracksHand
     {
         setConstraints(sfmData, tracksHandler, validViewIds);
     }
-
-    if (_historyHandler)
-    {
-        _historyHandler->saveState(sfmData);
-    }
+    
+    _historyHandler->saveState(sfmData);
 
     ALICEVISION_LOG_INFO("ExpansionChunk::process end");
 
