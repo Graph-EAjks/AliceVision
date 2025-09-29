@@ -79,7 +79,8 @@ bool bootstrapBase(sfmData::SfMData & sfmData,
 
         landmark.getObservations()[referenceViewId] = refObs;
         landmark.getObservations()[otherViewId] = nextObs;
-        
+
+        std::cout << trackId << std::endl;
         sfmData.getLandmarks()[trackId] = landmark;
     }
 
