@@ -48,6 +48,14 @@ class RelativePoseEstimating(desc.AVCommandLineNode):
             range=(1, 1000, 1),
             advanced=True,
         ),
+        desc.FloatParam(
+            name="distanceThreshold",
+            label="Distance threshold",
+            description="Threshold on geometric distance (epipolar distance or reprojection distance for pure rotation)",
+            value=4.0,
+            range=(0.0, 50.0, 1.0),
+            advanced=True,
+        ),
         desc.File(
             name="imagePairsList",
             label="Image Pairs",
