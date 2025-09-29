@@ -18,6 +18,13 @@ class SfMBootStrapping(desc.AVCommandLineNode):
             description="SfMData file.",
             value="",
         ),
+        desc.ChoiceParam(
+            name="method",
+            label="Method",
+            description="Method used (Classic, mesh, depth)",
+            values=["classic", "mesh", "depth"],
+            value="classic",
+        ),
         desc.File(
             name="tracksFilename",
             label="Tracks File",
@@ -29,6 +36,7 @@ class SfMBootStrapping(desc.AVCommandLineNode):
             label="Mesh File",
             description="Mesh file (*.obj).",
             value="",
+            enabled=lambda node: node.method.value == "mesh"
         ),
         desc.File(
             name="pairs",
