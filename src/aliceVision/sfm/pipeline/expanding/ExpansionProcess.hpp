@@ -66,6 +66,13 @@ public:
         _postProcessHandler = std::move(expansionPostProcess);
     }
 
+    /**
+     * @brief Remap the sfmData landmarks to id compatible with trackmap
+     * @param[in] sfmData the object to update
+     * @param[in] tracks the tracks for this scene
+     */
+    static void remapExistingLandmarks(sfmData::SfMData & sfmData, const track::TracksHandler & tracksHandler);
+
 private:
 
     /**
@@ -73,16 +80,7 @@ private:
      * @param[in] sfmData the object to update
      * @param[in] tracks the tracks for this scene
      */
-    bool prepareExisting(sfmData::SfMData & sfmData, const track::TracksHandler & tracksHandler);
-
-    /**
-     * @brief Remap the sfmData landmarks to id compatible with trackmap
-     * @param[in] sfmData the object to update
-     * @param[in] tracks the tracks for this scene
-     */
-    void remapExistingLandmarks(sfmData::SfMData & sfmData, const track::TracksHandler & tracksHandler);
-
-    
+    bool prepareExisting(sfmData::SfMData & sfmData, const track::TracksHandler & tracksHandler);    
    
 private:
     //Must be declared first for initialization
