@@ -128,20 +128,11 @@ void generateCubeScene(sfmData::SfMData& output)
 void generateSphereScene(sfmData::SfMData& output, int pointsNb, int posesNb)
 {
     // Generate random points on a sphere
-    IndexT idpt = 0;
-    for (int pt = 0; pt < pointsNb; pt++)
-    {
-        Eigen::Vector3d point3D = Eigen::Vector3d::Random();
-        point3D = 1. * point3D / point3D.norm();
-
-        output.getLandmarks().emplace(idpt, sfmData::Landmark(point3D, feature::EImageDescriberType::UNKNOWN));
-        ++idpt;
-    }
 
     const int w = 4092;
     const int h = 2048;
-    const double focalLengthPixX = 1000.0;
-    const double focalLengthPixY = 2000.0;
+    const double focalLengthPixX = 10000.0;
+    const double focalLengthPixY = 20000.0;
     output.getIntrinsics().emplace(
       0, camera::createPinhole(camera::EDISTORTION::DISTORTION_NONE, camera::EUNDISTORTION::UNDISTORTION_NONE, w, h, focalLengthPixX, focalLengthPixY, 0, 0));
 
@@ -156,6 +147,34 @@ void generateSphereScene(sfmData::SfMData& output, int pointsNb, int posesNb)
         output.getPoses().assign(idPV, sfmData::CameraPose(pose));
         output.getViews().emplace(idPV, std::make_shared<sfmData::View>("", idPV, 0, idPV, w, h));
         output.getView(idPV).setFrameId(idPV);
+    }
+
+    // Generate random points on a sphere and corresponding observations in each view
+    const double arbitraryScale = 1.0;
+    for (int landmarkId = 0; landmarkId < pointsNb; landmarkId++)
+    {
+        Eigen::Vector3d point3D = Eigen::Vector3d::Random();
+        point3D = 1. * point3D / point3D.norm();
+
+        sfmData::Landmark landmark(point3D, feature::EImageDescriberType::UNKNOWN);
+        for (int viewId = 0; viewId < posesNb; viewId++)
+        {
+            const sfmData::View& view = *output.getViews().at(viewId);
+            const geometry::Pose3 camPose = output.getPose(view).getTransform();
+
+            std::shared_ptr<camera::IntrinsicBase> cam = output.getIntrinsics().at(0);
+            std::shared_ptr<camera::Pinhole> camPinHole = std::dynamic_pointer_cast<camera::Pinhole>(cam);
+            if (!camPinHole)
+            {
+                std::cout << "Camera is not pinhole in getInputRigScene" << std::endl;
+                continue;
+            }
+
+            std::cout << point3D.transpose() << " -- " << landmark.X.transpose() << std::endl;
+            const Eigen::Vector2d pt = project(camPinHole->getProjectiveEquivalent(camPose), landmark.X);
+            landmark.getObservations().emplace(viewId, sfmData::Observation(pt, landmarkId, arbitraryScale));
+        }
+        output.getLandmarks().emplace(landmarkId, landmark);
     }
 }
 
