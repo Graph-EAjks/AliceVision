@@ -8,19 +8,20 @@
 
 #include <aliceVision/system/Logger.hpp>
 #include <aliceVision/sfm/sfmFilters.hpp>
+#include <aliceVision/sfm/utils/poseFilter.hpp>
 #include <aliceVision/sfm/bundle/BundleAdjustmentCeres.hpp>
 
 namespace aliceVision {
 namespace sfm {
 
 bool SfmBundle::process(sfmData::SfMData & sfmData, const track::TracksHandler & tracksHandler, const std::set<IndexT> & viewIds)
-{   
+{
     ALICEVISION_LOG_INFO("SfmBundle::process start");
 
     BundleAdjustmentCeres::CeresOptions options;
     BundleAdjustment::ERefineOptions refineOptions;
 
-    refineOptions |= BundleAdjustment::REFINE_ROTATION; 
+    refineOptions |= BundleAdjustment::REFINE_ROTATION;
     refineOptions |= BundleAdjustment::REFINE_TRANSLATION;
 
     if (_isStructureRefinementEnabled)
@@ -30,24 +31,47 @@ bool SfmBundle::process(sfmData::SfMData & sfmData, const track::TracksHandler &
 
     refineOptions |= BundleAdjustment::REFINE_INTRINSICS_ALL;
 
+    if (_bundleTemporalConstraint)
+    {
+        refineOptions |= BundleAdjustment::REFINE_TEMPORAL_SMOOTHNESS_CONSTRAINT;
+        options.temporalConstraintParams = _tempConstrParams;
+        // options.maxNumIterations = 1000;
+
+        // Fill in the blanks in the views by interpolating new poses (position and orientation)
+
+        sfm::poseFilter poseFilter;
+        if (!poseFilter.interpolateMissingPoses(sfmData, false))
+            return false;
+
+        if (_bundleExitAfterPoseInterpolation)
+        {
+            ALICEVISION_LOG_INFO("SfmBundle::process ended after pose interpolation");
+            return true;
+        }
+    }
+
     options.setSparseBA();
     BundleAdjustmentCeres bundleObject(options, _minNbCamerasToRefinePrincipalPoint);
 
+    int minIterBundle = _bundleTemporalConstraint ? 10 : 0;
+    int iterBundle = 0;
     //Repeat until nothing change
-    do 
+    do
     {
         if (!initializeIteration(sfmData, tracksHandler, viewIds))
         {
             return false;
         }
-        
+
         const bool success = bundleObject.adjust(sfmData, refineOptions);
         if (!success)
         {
             return false;
         }
+
+        iterBundle++;
     }
-    while (cleanup(sfmData));
+    while (cleanup(sfmData) || iterBundle < minIterBundle);
 
     ALICEVISION_LOG_INFO("SfmBundle::process end");
     return true;
@@ -67,7 +91,7 @@ bool SfmBundle::cleanup(sfmData::SfMData & sfmData)
     // Remove poses without enough observations in an interactive fashion
     const std::size_t nbOutliers = nbOutliersResidualErr + nbOutliersAngleErr;
     std::set<IndexT> removedViewsIdIteration;
-    bool somethingErased = eraseUnstablePosesAndObservations(sfmData, _minPointsPerPose, _minTrackLength, &removedViewsIdIteration);
+    bool somethingErased = !_bundleTemporalConstraint && eraseUnstablePosesAndObservations(sfmData, _minPointsPerPose, _minTrackLength, &removedViewsIdIteration);
 
     bool somethingChanged = /*somethingErased || */(nbOutliers > _bundleAdjustmentMaxOutlier) || (nbOutliersConstraints > 0);
 

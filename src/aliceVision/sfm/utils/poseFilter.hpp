@@ -28,11 +28,13 @@ public:
      * @return false if an error occurred
     */
     bool process(sfmData::SfMData& sfmData, const bool filterPosition, const bool filterRotation, const int scaleFactor, const int iterationCount);
+    bool interpolateMissingPoses(sfmData::SfMData& sfmData, const bool ignoreFirstAndLast);
 
 private:
     bool getOrderedViewIds(sfmData::SfMData& sfmData, std::vector<IndexT>& viewIdsVec);
 };
 
+bool getOrderedPoseIds(const sfmData::SfMData& sfmData, std::vector<IndexT>& poseIdsVec, IndexT& firstViewWithPose, IndexT& lastViewWithPose);
 } // namespace sfm
 } // namespace aliceVision
 
@@ -43,7 +45,7 @@ public:
     bool init();
     bool applyCoreFilter(Eigen::MatrixXd& inputSignal, Eigen::MatrixXd& filteredSignal, bool diffSignal);
     Eigen::MatrixXd apply(Eigen::MatrixXd& inputSignal, bool isAngle);
-    Eigen::MatrixXd applyMultiscale(Eigen::MatrixXd& inputSignal, const unsigned int scaleFactor, const int iterationCount, bool isAngle);
+    Eigen::MatrixXd applyMultiscale(Eigen::MatrixXd& inputSignal, const unsigned int scaleFactor, const int iterationCount, bool isAngle, const Eigen::VectorX<bool>& posesMask=Eigen::VectorX<bool>(0));
 
 private:
     bool initialized;
