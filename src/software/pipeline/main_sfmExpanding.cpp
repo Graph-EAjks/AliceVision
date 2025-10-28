@@ -28,7 +28,7 @@
 // These constants define the current software version.
 // They must be updated when the command line is changed.
 #define ALICEVISION_SOFTWARE_VERSION_MAJOR 2
-#define ALICEVISION_SOFTWARE_VERSION_MINOR 2
+#define ALICEVISION_SOFTWARE_VERSION_MINOR 3
 
 using namespace aliceVision;
 
@@ -100,6 +100,7 @@ int aliceVision_main(int argc, char** argv)
     double maxReprojectionError = 4.0;
     double maxTriangulationError = 8.0;
     bool lockAllIntrinsics = false;
+    bool disableStructureRefinement = false;
     int minNbCamerasToRefinePrincipalPoint = 3;
     bool useRigConstraint = true;
     int minNbCamerasForRigCalibration = 20;
@@ -146,6 +147,7 @@ int aliceVision_main(int argc, char** argv)
     ("maxTriangulationError", po::value<double>(&maxTriangulationError)->default_value(maxTriangulationError), "Maximum reprojection error in the triangulation process.")
     ("maxReprojectionError", po::value<double>(&maxReprojectionError)->default_value(maxReprojectionError), "Maximum reprojection error in the bundle verification step.")
     ("lockAllIntrinsics", po::value<bool>(&lockAllIntrinsics)->default_value(lockAllIntrinsics), "Force lock of all camera intrinsic parameters, so they will not be refined during Bundle Adjustment.")
+    ("disableStructureRefinement", po::value<bool>(&disableStructureRefinement)->default_value(disableStructureRefinement), "Bundle adjustment will not try to optimize the landmarks positions.")
     ("minNbCamerasToRefinePrincipalPoint", po::value<int>(&minNbCamerasToRefinePrincipalPoint)->default_value(minNbCamerasToRefinePrincipalPoint),
          "Minimal number of cameras to refine the principal point of the cameras (one of the intrinsic parameters of the camera). "
          "If we do not have enough cameras, the principal point in consider is considered in the center of the image. "
@@ -233,6 +235,7 @@ int aliceVision_main(int argc, char** argv)
     sfmBundle->setMinAngleLandmark(minAngleForLandmark);
     sfmBundle->setMaxReprojectionError(maxReprojectionError);
     sfmBundle->setMinNbCamerasToRefinePrincipalPoint(minNbCamerasToRefinePrincipalPoint);
+    sfmBundle->setIsStructureRefinementDisabled(disableStructureRefinement);
 
     sfm::PointFetcher::uptr pointFetcherHandler;
     if (!meshFilename.empty())

@@ -1,4 +1,4 @@
-__version__ = "2.2"
+__version__ = "2.3"
 
 from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
@@ -172,6 +172,12 @@ class SfMExpanding(desc.AVCommandLineNode):
             description="Force to keep all the intrinsic parameters of the cameras (focal length, \n"
                         "principal point, distortion if any) constant during the reconstruction.\n"
                         "This may be helpful if the input cameras are already fully calibrated.",
+            value=False,
+        ),
+        desc.BoolParam(
+            name="disableStructureRefinement",
+            label="Disable Structure Refinement",
+            description="Bundle adjustment will not try to optimize the landmarks positions.",
             value=False,
         ),
         desc.IntParam(
