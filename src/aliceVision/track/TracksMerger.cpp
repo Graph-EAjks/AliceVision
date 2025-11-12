@@ -5,6 +5,7 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #include <aliceVision/track/TracksMerger.hpp>
+#include <aliceVision/system/Logger.hpp>
 
 namespace aliceVision
 {
@@ -13,24 +14,48 @@ namespace track
 
 bool TracksMerger::addTrackMap(const track::TracksMap & inputTracks)
 {
+    // Loop over the tracks to add 
     for (const auto & [idTrack, track]: inputTracks)
     {
-        IndexT foundTrack = UndefinedIndexT;
-        size_t newSize = track.featPerView.size();
-        
+        std::map<IndexT, size_t> potentials;
+
+        // Find if one of the feature is already existing in a track
+        // In this case we would like to merge both tracks instead of adding a track
         for (const auto & [idView, feat]: track.featPerView)
         {
             TuplePoint tp = std::make_tuple(track.descType, idView, feat.featureId);
-            auto it = _existingTracks.find(tp);
-            if (it != _existingTracks.end())
+            if (_existingTracks.find(tp) == _existingTracks.end())
             {
-                foundTrack = it->second;
-                break;
+                //This feature is not present in the existing tracks
+                continue;
+            }
+
+            // Compute stats on best target to use
+            IndexT target = _existingTracks[tp];
+            if (potentials.find(target) == potentials.end())
+            {
+                potentials[target] = _tracks[target].featPerView.size() + 1;
+            }
+            else 
+            {
+                potentials[target]++;
             }
         }
-        
+
+        // Select the largest track solution
+        size_t bestSize = 0;
+        IndexT foundTrack = UndefinedIndexT;
+        for (const auto [trackId, size] : potentials)
+        {
+            if (size > bestSize)
+            {
+                foundTrack = trackId;
+                bestSize = size;
+            }
+        }
+
         if (foundTrack == UndefinedIndexT)
-        {   
+        {
             //Simply add track
             foundTrack = _lastIndex;
             _lastIndex++;
@@ -40,27 +65,26 @@ bool TracksMerger::addTrackMap(const track::TracksMap & inputTracks)
         auto & outputTrack = _tracks[foundTrack];
         outputTrack.descType = track.descType;
 
-        //Previous Size is either 0 if new track, or the size of the matching track
-        size_t oldSize = outputTrack.featPerView.size();
-        
-        //Append all features from existing track
+        // Find if one of the feature is already existing in a track
+        // In this case we would like to merge both tracks instead of adding a track
         for (const auto & [idView, feat]: track.featPerView)
         {
+            //Ignore all trackitems which disagree with the retargeting
             TuplePoint tp = std::make_tuple(track.descType, idView, feat.featureId);
-            _existingTracks[tp] = foundTrack;
-
-            // Replace only if the new tracks is longer than the old one.
-            if (outputTrack.featPerView.find(idView) != outputTrack.featPerView.end())
+            if (_existingTracks.find(tp) != _existingTracks.end())
             {
-                if (newSize < oldSize)
+                IndexT target = _existingTracks[tp];
+                if (target != foundTrack)
                 {
                     continue;
                 }
-            } 
-            
+            }
+
             outputTrack.featPerView[idView] = feat;
+            _existingTracks[tp] = foundTrack;
         }
-    }
+    }    
+
 
     return true;
 }
