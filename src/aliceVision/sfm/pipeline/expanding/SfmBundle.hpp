@@ -32,7 +32,7 @@ public:
     bool process(sfmData::SfMData & sfmData, const track::TracksHandler & tracksHandler, const std::set<IndexT> & viewIds);
 
     /**
-     * brief setup the expansion chunk handler
+     * @brief setup the expansion chunk handler
      * @param expansionChunk a unique ptr. Ownership will be taken
      */
     void setLbaPolicyHandler(LbaPolicy::uptr & lbaPolicy)

@@ -45,7 +45,7 @@ public:
     }
 
     /**
-     * brief setup the expansion history handler
+     * @brief setup the expansion history handler
      * @param expansionHistory a shared ptr
      */
     void setExpansionHistoryHandler(ExpansionHistory::sptr & expansionHistory)
@@ -54,7 +54,7 @@ public:
     }
 
     /**
-     * brief setup the Resection handler
+     * @brief setup the Resection handler
      * @param resectionHandler a unique ptr. the Ownership will be taken
     */
     void setResectionHandler(SfmResection::uptr & resectionHandler)
@@ -63,7 +63,7 @@ public:
     }
 
     /**
-     * brief setup the Triangulation handler
+     * @brief setup the Triangulation handler
      * @param triangulationHandler a unique ptr. the Ownership will be taken
     */
     void setTriangulationHandler(SfmTriangulation::uptr & triangulationHandler)

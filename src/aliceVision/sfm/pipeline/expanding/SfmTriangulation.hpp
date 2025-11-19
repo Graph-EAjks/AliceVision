@@ -55,7 +55,7 @@ public:
         );
 
     /**
-     * brief setup the point fetcher handler
+     * @brief setup the point fetcher handler
      * @param pointFetcher a unique ptr. the Ownership will be taken
     */
     void setPointFetcherHandler(PointFetcher::uptr & pointFetcherHandler)
