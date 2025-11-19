@@ -67,7 +67,7 @@ public:
     * @brief Retrieve the requested minimal number of observations per triangulation
     * @return a positive number which is the minimal number of observations per point.
     */
-    size_t getMinObservations()
+    size_t getMinObservations() const
     {
         return _minObservations;
     }
