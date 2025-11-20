@@ -345,6 +345,7 @@ bool SfmTriangulation::processTrackWithPointFetcher(
         landmark.setParallaxRobust(true);
         landmark.X = refpt;
         landmark.descType = track.descType;
+        landmark.setIsPrecise(true);
 
         //For each observed view in the track
         for (auto viewId: viewIds)
