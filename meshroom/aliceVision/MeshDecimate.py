@@ -5,7 +5,15 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class MeshDecimate(desc.AVCommandLineNode):
-    """This node allows to reduce the density of the Mesh."""
+    """
+Reduce the polygon count of a 3D mesh while preserving its overall shape.
+
+High-resolution meshes produced by multi-view reconstruction can contain millions of
+triangles, which may be prohibitively large for real-time rendering or downstream
+processing. This node applies a simplification algorithm to reduce the number of faces
+by a configurable factor, or to a target face count, while minimising the geometric
+error introduced by the simplification.
+"""
 
     commandLine = "aliceVision_meshDecimate {allParams}"
     cpu = desc.Level.NORMAL

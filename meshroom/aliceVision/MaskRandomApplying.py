@@ -6,7 +6,14 @@ from meshroom.core.utils import DESCRIBER_TYPES, VERBOSE_LEVEL
 
 
 class MaskRandomApplying(desc.AVCommandLineNode):
-    """Apply random values to images on the pixel whose mask value is 0"""
+    """
+Replace masked-out pixels in images with random noise.
+
+For each image, pixels whose corresponding mask value is zero (i.e., the background) are
+overwritten with random values. This can be used as a data augmentation technique or to
+prevent deep learning models from learning spurious correlations from background content,
+ensuring that only the foreground object influences the network predictions.
+"""
 
     commandLine = "aliceVision_maskRandomApplying {allParams}"
 

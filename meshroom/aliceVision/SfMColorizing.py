@@ -6,7 +6,14 @@ from meshroom.core.utils import VERBOSE_LEVEL
 import json
 
 class SfMColorizing(desc.AVCommandLineNode):
-    """Colorize the pointcloud of an SfMData."""
+    """
+Assign RGB colors to the 3D point cloud in an SfMData scene.
+
+Each 3D landmark in the scene is colored by sampling the pixel values from the
+input images in which it is visible. When a landmark is seen by multiple cameras,
+the colors are averaged to produce a robust estimate. The colored point cloud
+can be exported or visualized to assess the quality of the reconstruction.
+"""
 
 
     commandLine = "aliceVision_sfmColorizing {allParams}"

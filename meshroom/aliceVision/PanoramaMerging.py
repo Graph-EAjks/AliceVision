@@ -8,7 +8,13 @@ from meshroom.core.utils import EXR_STORAGE_DATA_TYPE, VERBOSE_LEVEL
 
 
 class PanoramaMerging(desc.AVCommandLineNode):
-    """Merge all inputs coming from the PanoramaCompositing node."""
+    """
+Merge all composited image tiles from the PanoramaCompositing node into a single panoramic image.
+
+PanoramaCompositing produces one composited tile per view. This node reads all tiles,
+assembles them according to their positions in the panorama coordinate system, and writes
+the final full-resolution panoramic image. The output format is a multi-channel EXR file.
+"""
 
     commandLine = "aliceVision_panoramaMerging {allParams}"
     size = desc.DynamicNodeSize("input")

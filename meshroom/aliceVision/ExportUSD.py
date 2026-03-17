@@ -5,7 +5,14 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class ExportUSD(desc.AVCommandLineNode):
-    """Export a mesh (OBJ file) to USD format."""
+    """
+Export a 3D mesh to Universal Scene Description (USD) format.
+
+USD is a versatile scene interchange format developed by Pixar, widely used in visual
+effects and real-time rendering pipelines. This node converts an input OBJ mesh file
+to either a human-readable USDA (ASCII) or compact USDC (binary) USD file. Associated
+textures and materials are referenced in the exported scene.
+"""
 
     commandLine = "aliceVision_exportUSD {allParams}"
     size = desc.DynamicNodeSize("input")

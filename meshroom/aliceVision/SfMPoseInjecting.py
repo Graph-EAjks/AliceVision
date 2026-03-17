@@ -7,7 +7,16 @@ import json
 import pathlib
 
 class SfMPoseInjecting(desc.AVCommandLineNode):
-    """Use a JSON file to inject poses inside the SfMData."""
+    """
+Inject external camera pose data from a JSON or Alembic file into an SfMData scene.
+
+This node reads pre-computed camera poses (position and orientation) from an external
+file and assigns them to the corresponding views in the SfMData, matching views by frame
+number with an optional offset. The injected poses can be locked to prevent them from
+being modified by subsequent bundle adjustment steps. This is useful when poses have
+been obtained from an IMU, GPS, or another tracking system and should be used as
+constraints or initial values for the reconstruction.
+"""
 
 
     commandLine = "aliceVision_sfmPoseInjecting {allParams}"

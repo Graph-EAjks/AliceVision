@@ -4,7 +4,14 @@ from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 
 class LidarMerging(desc.AVCommandLineNode):
-    """This node merge several meshes into one."""
+    """
+Merge multiple meshes reconstructed from LiDAR data into a single unified mesh.
+
+After individual LiDAR point cloud patches have been independently meshed (by LidarMeshing)
+and optionally decimated (by LidarDecimating), this node combines all the partial meshes
+into one continuous mesh. Overlapping regions between adjacent patches are handled to
+produce a seamless result.
+"""
 
     commandLine = "aliceVision_lidarMerging {allParams}"
 

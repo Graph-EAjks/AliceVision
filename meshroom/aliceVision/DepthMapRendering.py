@@ -5,7 +5,14 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class DepthMapRendering(desc.AVCommandLineNode):
-    """Using camera parameters and mesh, render depthmaps for each view."""
+    """
+Render synthetic depth maps for each calibrated camera using a reference 3D mesh.
+
+Given an SfMData file with known camera poses and intrinsics, and a 3D mesh, this node
+rasterizes the mesh from each camera viewpoint to produce per-view depth maps. These
+rendered depth maps can be used as ground-truth references for evaluating depth estimation
+quality, or as initialization for depth map fusion.
+"""
 
     commandLine = "aliceVision_depthMapRendering {allParams}"
 

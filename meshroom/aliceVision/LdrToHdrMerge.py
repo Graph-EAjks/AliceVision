@@ -25,7 +25,14 @@ def findMetadata(d, keys, defaultValue):
 
 
 class LdrToHdrMerge(desc.AVCommandLineNode):
-    """Merge LDR images into HDR images."""
+    """
+Merge a bracketed set of LDR (Low Dynamic Range) images into a single HDR (High Dynamic Range) image.
+
+Using the camera response function calibrated by LdrToHdrCalibration, this node combines
+multiple exposures of the same scene into a single 32-bit floating-point EXR image with
+an extended luminance range. The merge process applies a weighting function to each exposure
+to favour well-exposed pixels, and ghost artefacts caused by moving subjects can be suppressed.
+"""
 
     commandLine = "aliceVision_LdrToHdrMerge {allParams}"
     size = avpar.DynamicDividedViewsSize("input", "nbBrackets")

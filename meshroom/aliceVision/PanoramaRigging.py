@@ -5,7 +5,15 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class PanoramaRigging(desc.AVCommandLineNode):
-    """Transform a panorama to a panorama with a rig"""
+    """
+Convert a panorama captured with a single moving camera into a rig-based representation.
+
+When a panorama is captured by rotating a single camera around its nodal point, each
+image is treated as an independent view. This node re-expresses the same panorama as
+a virtual multi-camera rig, where all cameras share a common rig pose. This rig-based
+representation is required for certain downstream processing steps that expect a rigid
+multi-camera configuration.
+"""
 
     commandLine = "aliceVision_panoramaRigging {allParams}"
     size = desc.DynamicNodeSize("input")

@@ -26,7 +26,14 @@ def findMetadata(d, keys, defaultValue):
 
 
 class LdrToHdrSampling(desc.AVCommandLineNode):
-    """Sample pixels from Low range images for HDR creation."""
+    """
+Sample representative pixels from a bracketed LDR exposure sequence for HDR calibration.
+
+This node analyses the input images and selects a set of pixel samples distributed
+across the image, covering a range of intensity values. These samples are later used
+by LdrToHdrCalibration to estimate the camera response function. Consistent sampling
+across the bracketed frames is essential for an accurate CRF estimation.
+"""
 
     commandLine = "aliceVision_LdrToHdrSampling {allParams}"
     size = avpar.DynamicDividedViewsSize("input", "nbBrackets")

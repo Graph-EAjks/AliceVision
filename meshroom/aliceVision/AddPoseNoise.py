@@ -6,7 +6,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 class AddPoseNoise(desc.AVCommandLineNode):
     '''
-This node adds noise to view positions and view orientations
+Add synthetic noise to the camera poses in an SfMData scene.
+
+This node perturbs each camera's position and orientation by a configurable amount of
+Gaussian noise. It is primarily intended for testing and benchmarking purposes, allowing
+users to evaluate the robustness of downstream algorithms (e.g., bundle adjustment, depth
+map estimation) when the input poses are not perfect.
 '''
 
     commandLine = 'aliceVision_addPoseNoise {allParams}'

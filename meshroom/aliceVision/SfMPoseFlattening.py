@@ -6,10 +6,14 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 class SfMPoseFlattening(desc.Node):
     """
-    Takes a sfmData as input.
-    If the sfmData contained a rig, each view will be transformed such that they point to 
-    individual independent poses. The absolute pose of each view is kept numerically.
-    """
+Convert a rig-based SfMData into a flat set of independent camera poses.
+
+If the input SfMData describes a multi-camera rig (where multiple views share a single
+rig pose), this node transforms the representation so that each view has its own
+independent absolute pose. The world-space position and orientation of each camera
+are preserved numerically; only the rig hierarchy is removed. This is useful for
+passing rig reconstructions to nodes that do not support rig structures.
+"""
 
 
     size = desc.DynamicNodeSize("input")
