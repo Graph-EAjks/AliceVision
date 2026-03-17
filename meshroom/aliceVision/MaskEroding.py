@@ -6,6 +6,9 @@ from pyalicevision import parallelization as avpar
 
 
 class MaskEroding(desc.AVCommandLineNode):
+    """ Assumes the inputs are binary masks. 
+    Erode the valid part of the mask such that a new pixel is valid if and only if the input region is fully valid. """
+
     commandLine = "aliceVision_maskEroding {allParams}"
 
     size = avpar.DynamicViewsSize("input")
@@ -13,9 +16,6 @@ class MaskEroding(desc.AVCommandLineNode):
     commandLineRange = "--rangeIteration {rangeIteration} --rangeBlocksCount {rangeBlocksCount}"
 
     category = "Utils"
-    documentation = """ Assumes the inputs are binary masks. 
-    Erode the valid part of the mask such that a new pixel is valid if and only if the input region is fully valid. """
-
     inputs = [
         desc.File(
             name="input",

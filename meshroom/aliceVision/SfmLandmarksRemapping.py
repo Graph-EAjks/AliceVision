@@ -5,15 +5,15 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class SfMLandmarksRemapping(desc.AVCommandLineNode):
-    commandLine = "aliceVision_sfmLandmarksRemapping {allParams}"
-    size = desc.DynamicNodeSize("input")
-
-    category = "Utils"
-    documentation = """
+    """
     A landmark is created using a track. Both have ids. It is assumed in many nodes that the source track id is the landmark id.
     In this node, we update the landmark id to match its track id. It may have change over operations on tracks.
     """
 
+    commandLine = "aliceVision_sfmLandmarksRemapping {allParams}"
+    size = desc.DynamicNodeSize("input")
+
+    category = "Utils"
     inputs = [
         desc.File(
             name="input",

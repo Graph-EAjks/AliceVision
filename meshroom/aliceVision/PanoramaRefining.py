@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class PanoramaRefining(desc.AVCommandLineNode):
+    """Refine panorama estimation using bundle adjustment."""
+
     commandLine = "aliceVision_panoramaRefining {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Panorama HDR"
-    documentation = """Refine panorama estimation using bundle adjustment."""
-
     inputs = [
         desc.File(
             name="input",

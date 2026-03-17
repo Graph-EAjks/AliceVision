@@ -12,8 +12,6 @@ class SfMExpanding(desc.AVCommandLineNode):
     ram = desc.Level.INTENSIVE
 
     category = "Sparse Reconstruction"
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

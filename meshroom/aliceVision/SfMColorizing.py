@@ -6,13 +6,13 @@ from meshroom.core.utils import VERBOSE_LEVEL
 import json
 
 class SfMColorizing(desc.AVCommandLineNode):
+    """Colorize the pointcloud of an SfMData."""
+
 
     commandLine = "aliceVision_sfmColorizing {allParams}"
     size = desc.DynamicNodeSize("input")
     
     category = "Utils"
-    documentation = """Colorize the pointcloud of an SfMData."""
-
     inputs = [
         desc.File(
             name="input",

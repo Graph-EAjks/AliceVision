@@ -21,12 +21,12 @@ class Split360InputNodeSize(desc.DynamicNodeSize):
 
 
 class Split360Images(desc.AVCommandLineNode):
+    """This node is used to extract multiple images from equirectangular or dualfisheye images."""
+
     commandLine = "aliceVision_split360Images {allParams}"
     size = Split360InputNodeSize("input")
     
     category = "Utils"
-    documentation = """This node is used to extract multiple images from equirectangular or dualfisheye images."""
-
     inputs = [
         desc.File(
             name="input",

@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class ConvertDistortion(desc.AVCommandLineNode):
+    """Convert distortions between different models."""
+
     commandLine = "aliceVision_convertDistortion {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Utils"
-    documentation = """Convert distortions between different models."""
-
     inputs = [
         desc.File(
             name="input",

@@ -8,8 +8,6 @@ class SfMDistances(desc.AVCommandLineNode):
     commandLine = "aliceVision_sfmDistances {allParams}"
     size = desc.DynamicNodeSize("input")
 
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

@@ -5,15 +5,15 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class SfMPoseFlattening(desc.Node):
-
-    size = desc.DynamicNodeSize("input")
-    category = "Utils"
-    documentation = """
+    """
     Takes a sfmData as input.
     If the sfmData contained a rig, each view will be transformed such that they point to 
     individual independent poses. The absolute pose of each view is kept numerically.
     """
 
+
+    size = desc.DynamicNodeSize("input")
+    category = "Utils"
     inputs = [
         desc.File(
             name="input",

@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class ExportUSD(desc.AVCommandLineNode):
+    """Export a mesh (OBJ file) to USD format."""
+
     commandLine = "aliceVision_exportUSD {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Utils"
-    documentation = """ Export a mesh (OBJ file) to USD format. """
-
     inputs = [
         desc.File(
             name="input",

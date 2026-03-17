@@ -5,11 +5,11 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class DepthMapTracksInjecting(desc.AVCommandLineNode):
+    '''Inject depth from depthmaps into tracks.'''
+
     commandLine = 'aliceVision_depthmapTracksInjecting {allParams}'
 
     category = 'Utils'
-    documentation = '''Inject depth from depthmaps into tracks.'''
-
     inputs = [
         desc.File(
             name="input",

@@ -5,14 +5,14 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class SfMChecking(desc.Node):
-
-    size = desc.DynamicNodeSize("input")
-    category = "Utils"
-    documentation = """
+    """
 Check an input SfM for validity.
 Throw an error if the SfM does not satisfy constraints.
 """
 
+
+    size = desc.DynamicNodeSize("input")
+    category = "Utils"
     inputs = [
         desc.File(
             name="input",

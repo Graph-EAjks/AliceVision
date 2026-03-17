@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class GlobalPositionEstimating(desc.AVCommandLineNode):
+    """Estimate the global translations and structure given tracks."""
+
     commandLine = "aliceVision_globalPositionEstimating {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Sparse Reconstruction"
-    documentation = """Estimate the global translations and structure given tracks."""
-
     cpu = desc.Level.INTENSIVE
     ram = desc.Level.INTENSIVE
 

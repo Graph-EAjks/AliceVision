@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class ApplyCalibration(desc.AVCommandLineNode):
+    """Overwrite intrinsics with a calibrated intrinsic."""
+
     commandLine = "aliceVision_applyCalibration {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Utils"
-    documentation = """ Overwrite intrinsics with a calibrated intrinsic. """
-
     inputs = [
         desc.File(
             name="input",

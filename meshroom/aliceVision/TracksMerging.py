@@ -7,11 +7,11 @@ import os.path
 
 
 class TracksMerging(desc.AVCommandLineNode):
+    """Merge multiple track files into a single one."""
+
     commandLine = "aliceVision_tracksMerging {allParams}"
 
     category = "Utils"
-    documentation = """Merge multiple track files into a single one."""
-
     inputs = [
         desc.ListAttribute(
             elementDesc=desc.File(

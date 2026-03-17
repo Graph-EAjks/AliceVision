@@ -7,13 +7,13 @@ import json
 import pathlib
 
 class SfMPoseInjecting(desc.AVCommandLineNode):
+    """Use a JSON file to inject poses inside the SfMData."""
+
 
     commandLine = "aliceVision_sfmPoseInjecting {allParams}"
     size = desc.DynamicNodeSize("input")
     
     category = "Utils"
-    documentation = """Use a JSON file to inject poses inside the SfMData."""
-
     inputs = [
         desc.File(
             name="input",

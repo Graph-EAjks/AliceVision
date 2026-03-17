@@ -7,12 +7,12 @@ import os.path
 
 
 class SfMTransfer(desc.AVCommandLineNode):
+    """This node allows to transfer poses and/or intrinsics form one SfM scene onto another one."""
+
     commandLine = "aliceVision_sfmTransfer {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Utils"
-    documentation = """This node allows to transfer poses and/or intrinsics form one SfM scene onto another one."""
-
     inputs = [
         desc.File(
             name="input",

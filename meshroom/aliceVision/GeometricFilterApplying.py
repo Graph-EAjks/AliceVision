@@ -5,16 +5,16 @@ from meshroom.core.utils import DESCRIBER_TYPES, VERBOSE_LEVEL
 from pyalicevision import parallelization as avpar
 
 class GeometricFilterApplying(desc.AVCommandLineNode):
+    '''
+Apply precomputed transforms to matches to filter geometric matches
+'''
+
     commandLine = 'aliceVision_geometricFilterApplying {allParams}'
     size = avpar.DynamicViewsSize("input")
     parallelization = desc.Parallelization(blockSize=20)
     commandLineRange = '--rangeIteration {rangeIteration} --rangeBlocksCount {rangeBlocksCount}'
 
     category = 'Sparse Reconstruction'
-    documentation = '''
-Apply precomputed transforms to matches to filter geometric matches
-'''
-
     inputs = [
         desc.File(
             name="input",

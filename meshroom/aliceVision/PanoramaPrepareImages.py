@@ -7,12 +7,12 @@ import os.path
 
 
 class PanoramaPrepareImages(desc.AVCommandLineNode):
+    """Prepare images for Panorama pipeline: ensures that images orientations are coherent."""
+
     commandLine = "aliceVision_panoramaPrepareImages {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Panorama HDR"
-    documentation = """Prepare images for Panorama pipeline: ensures that images orientations are coherent."""
-
     inputs = [
         desc.File(
             name="input",

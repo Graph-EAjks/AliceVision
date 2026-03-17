@@ -5,10 +5,7 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class SfMRigApplying(desc.Node):
-
-    size = desc.DynamicNodeSize("input")
-    category = "Utils"
-    documentation = """
+    """
     Assume the input file is a non calibrated rig with only one pose but N views
     Assume the rig calibration file is a calibrated rig with one or more pose but N sub-poses
     Assume the number of intrinsics is the same and the intrinsics ids are equals.
@@ -16,6 +13,9 @@ class SfMRigApplying(desc.Node):
     input file are set to the sub-pose of the calibrated rig.
     """
 
+
+    size = desc.DynamicNodeSize("input")
+    category = "Utils"
     inputs = [
         desc.File(
             name="input",

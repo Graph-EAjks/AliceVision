@@ -5,6 +5,10 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class AddPoseNoise(desc.AVCommandLineNode):
+    '''
+This node adds noise to view positions and view orientations
+'''
+
     commandLine = 'aliceVision_addPoseNoise {allParams}'
     size = desc.DynamicNodeSize('input')
 
@@ -12,10 +16,6 @@ class AddPoseNoise(desc.AVCommandLineNode):
     ram = desc.Level.INTENSIVE
 
     category = 'Utils'
-    documentation = '''
-This node adds noise to view positions and view orientations
-'''
-
     inputs = [
         desc.File(
             name="input",

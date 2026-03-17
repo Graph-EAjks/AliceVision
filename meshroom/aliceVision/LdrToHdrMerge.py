@@ -25,14 +25,14 @@ def findMetadata(d, keys, defaultValue):
 
 
 class LdrToHdrMerge(desc.AVCommandLineNode):
+    """Merge LDR images into HDR images."""
+
     commandLine = "aliceVision_LdrToHdrMerge {allParams}"
     size = avpar.DynamicDividedViewsSize("input", "nbBrackets")
     parallelization = desc.Parallelization(blockSize=2)
     commandLineRange = "--rangeStart {rangeStart} --rangeSize {rangeBlockSize}"
 
     category = "Panorama HDR"
-    documentation = """Merge LDR images into HDR images."""
-
     inputs = [
         desc.File(
             name="input",

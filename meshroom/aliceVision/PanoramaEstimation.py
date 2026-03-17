@@ -5,12 +5,12 @@ from meshroom.core.utils import DESCRIBER_TYPES, VERBOSE_LEVEL
 
 
 class PanoramaEstimation(desc.AVCommandLineNode):
+    """Estimate relative camera rotations between input images."""
+
     commandLine = "aliceVision_panoramaEstimation {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Panorama HDR"
-    documentation = """Estimate relative camera rotations between input images."""
-
     inputs = [
         desc.File(
             name="input",

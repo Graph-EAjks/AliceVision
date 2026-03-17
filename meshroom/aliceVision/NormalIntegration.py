@@ -4,10 +4,10 @@ from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 
 class NormalIntegration(desc.CommandLineNode):
+    """Evaluate a depth map from a normals map (currently in development)."""
+
     commandLine = "aliceVision_normalIntegration {allParams}"
     category = "Photometric Stereo"
-    documentation = """Evaluate a depth map from a normals map (currently in development)."""
-
     inputs = [
         desc.File(
             name="inputPath",

@@ -5,11 +5,11 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class DepthMapRendering(desc.AVCommandLineNode):
+    """Using camera parameters and mesh, render depthmaps for each view."""
+
     commandLine = "aliceVision_depthMapRendering {allParams}"
 
     category = "Utils"
-    documentation = """Using camera parameters and mesh, render depthmaps for each view."""
-
     inputs = [
         desc.File(
             name="input",

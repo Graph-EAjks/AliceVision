@@ -4,6 +4,8 @@ from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 
 class LidarDecimating(desc.AVCommandLineNode):
+    """This node simplifies previously reconstructed meshes from Lidar."""
+
     commandLine = "aliceVision_lidarDecimating {allParams}"
 
     size = desc.StaticNodeSize(10)
@@ -14,8 +16,6 @@ class LidarDecimating(desc.AVCommandLineNode):
     ram = desc.Level.INTENSIVE
 
     category = "Dense Reconstruction"
-    documentation = """This node simplifies previously reconstructed meshes from Lidar."""
-
     inputs = [
         desc.File(
             name="input",

@@ -5,13 +5,13 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class SampleScene(desc.AVCommandLineNode):
-    commandLine = "aliceVision_generateSampleScene {allParams}"
-
-    category = "Utils"
-    documentation = """
+    """
 Generate a sample scene and a valid SfMData with camera poses, and save it to a given file path.
 """
 
+    commandLine = "aliceVision_generateSampleScene {allParams}"
+
+    category = "Utils"
     inputs = [
         desc.ChoiceParam(
             name="scene",

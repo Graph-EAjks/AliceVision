@@ -26,14 +26,14 @@ def findMetadata(d, keys, defaultValue):
 
 
 class LdrToHdrSampling(desc.AVCommandLineNode):
+    """Sample pixels from Low range images for HDR creation."""
+
     commandLine = "aliceVision_LdrToHdrSampling {allParams}"
     size = avpar.DynamicDividedViewsSize("input", "nbBrackets")
     parallelization = desc.Parallelization(blockSize=2)
     commandLineRange = "--rangeStart {rangeStart} --rangeSize {rangeBlockSize}"
 
     category = "Panorama HDR"
-    documentation = """Sample pixels from Low range images for HDR creation."""
-
     outliersNb = 0  # Number of detected outliers among the input images
 
     inputs = [

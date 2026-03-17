@@ -26,12 +26,12 @@ class MaskProcessingNodeSize(desc.DynamicNodeSize):
 
 
 class MaskProcessing(desc.AVCommandLineNode):
+    """Perform operations on a list of masks with the same names."""
+
     commandLine = "aliceVision_maskProcessing {allParams}"
     size = MaskProcessingNodeSize("inputs")
 
     category = "Utils"
-    documentation = """Perform operations on a list of masks with the same names."""
-
     inputs = [
         desc.ListAttribute(
             elementDesc=desc.File(

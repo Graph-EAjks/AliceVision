@@ -8,8 +8,6 @@ class LightingEstimation(desc.AVCommandLineNode):
     commandLine = "aliceVision_lightingEstimation {allParams}"
 
     category = "Utils"
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

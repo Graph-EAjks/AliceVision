@@ -6,12 +6,12 @@ from meshroom.core.utils import DESCRIBER_TYPES, VERBOSE_LEVEL
 
 
 class MaskRandomApplying(desc.AVCommandLineNode):
+    """Apply random values to images on the pixel whose mask value is 0"""
+
     commandLine = "aliceVision_maskRandomApplying {allParams}"
 
     size = desc.DynamicNodeSize("input")
     category = "Utils"
-    documentation = """ Apply random values to images on the pixel whose mask value is 0 """
-
     inputs = [
         desc.File(
             name="input",

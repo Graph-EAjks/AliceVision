@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class GlobalRotationEstimating(desc.AVCommandLineNode):
+    """Estimate the global rotation given tracks."""
+
     commandLine = "aliceVision_globalRotationEstimating {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Sparse Reconstruction"
-    documentation = """Estimate the global rotation given tracks."""
-
     inputs = [
         desc.File(
             name="input",

@@ -8,8 +8,6 @@ class ExportColoredPointCloud(desc.AVCommandLineNode):
     commandLine = "aliceVision_exportColoredPointCloud {allParams}"
 
     category = "Export"
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

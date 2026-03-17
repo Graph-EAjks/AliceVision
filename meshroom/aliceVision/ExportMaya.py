@@ -4,13 +4,13 @@ from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 
 class ExportMaya(desc.Node):
-
-    category = "Export"
-    documentation = """
+    """
 Export a Maya script.
 This script, executed inside Maya, will gather the Meshroom computed elements.
 """
 
+
+    category = "Export"
     inputs = [
         desc.File(
             name="input",

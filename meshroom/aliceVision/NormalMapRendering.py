@@ -5,11 +5,11 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class NormalMapRendering(desc.AVCommandLineNode):
+    """Using camera parameters and mesh, render normalmaps for each view."""
+
     commandLine = "aliceVision_normalMapRendering {allParams}"
 
     category = "Utils"
-    documentation = """Using camera parameters and mesh, render normalmaps for each view."""
-
     inputs = [
         desc.File(
             name="input",

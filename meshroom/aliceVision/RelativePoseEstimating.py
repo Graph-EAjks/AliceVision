@@ -5,6 +5,8 @@ from meshroom.core.utils import DESCRIBER_TYPES, VERBOSE_LEVEL
 from pyalicevision import parallelization as avpar
 
 class RelativePoseEstimating(desc.AVCommandLineNode):
+    """Estimate relative pose between each pair of views that share tracks."""
+
     commandLine = "aliceVision_relativePoseEstimating {allParams}"
     size = avpar.DynamicViewsSize("input")
     
@@ -12,8 +14,6 @@ class RelativePoseEstimating(desc.AVCommandLineNode):
     commandLineRange = "--rangeIteration {rangeIteration} --rangeBlocksCount {rangeBlocksCount}"
 
     category = "Sparse Reconstruction"
-    documentation = """Estimate relative pose between each pair of views that share tracks."""
-
     inputs = [
         desc.File(
             name="input",

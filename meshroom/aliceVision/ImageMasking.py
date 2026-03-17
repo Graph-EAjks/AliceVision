@@ -10,8 +10,6 @@ class ImageMasking(desc.AVCommandLineNode):
     parallelization = desc.Parallelization(blockSize=40)
     commandLineRange = "--rangeStart {rangeStart} --rangeSize {rangeBlockSize}"
 
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

@@ -9,8 +9,6 @@ class SfMBootStrapping(desc.AVCommandLineNode):
     size = desc.DynamicNodeSize("input")
 
     category = "Sparse Reconstruction"
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

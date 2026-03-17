@@ -5,11 +5,11 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class ListImages(desc.AVCommandLineNode):
+    """Generate a sfmData using a set of images."""
+
     commandLine = "aliceVision_listImages {allParams}"
 
     category = "Utils"
-    documentation = """Generate a sfmData using a set of images."""
-
     inputs = [
         desc.ListAttribute(
             elementDesc=desc.File(

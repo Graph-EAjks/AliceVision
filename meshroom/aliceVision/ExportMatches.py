@@ -9,8 +9,6 @@ class ExportMatches(desc.AVCommandLineNode):
     size = desc.DynamicNodeSize("input")
 
     category = "Export"
-    documentation = """ """
-
     inputs = [
         desc.File(
             name="input",

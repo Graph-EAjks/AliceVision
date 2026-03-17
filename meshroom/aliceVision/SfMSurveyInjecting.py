@@ -6,13 +6,13 @@ from meshroom.core.utils import VERBOSE_LEVEL
 import json
 
 class SfMSurveyInjecting(desc.AVCommandLineNode):
+    """Use a JSON file to inject survey measurements inside the SfMData."""
+
 
     commandLine = "aliceVision_sfmSurveyInjecting {allParams}"
     size = desc.DynamicNodeSize("input")
     
     category = "Utils"
-    documentation = """Use a JSON file to inject survey measurements inside the SfMData."""
-
     inputs = [
         desc.File(
             name="input",

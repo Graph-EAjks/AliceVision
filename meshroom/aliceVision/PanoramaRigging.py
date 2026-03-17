@@ -5,12 +5,12 @@ from meshroom.core.utils import VERBOSE_LEVEL
 
 
 class PanoramaRigging(desc.AVCommandLineNode):
+    """Transform a panorama to a panorama with a rig"""
+
     commandLine = "aliceVision_panoramaRigging {allParams}"
     size = desc.DynamicNodeSize("input")
 
     category = "Panorama HDR"
-    documentation = """Transform a panorama to a panorama with a rig"""
-
     inputs = [
         desc.File(
             name="input",
